@@ -1,6 +1,5 @@
 import React from 'react';
 import useGeolocation from './hooks/useGeolocation';
-import GeolocationData from './GeolocationData'
 
 const App = () => {
   const location = useGeolocation();
@@ -16,7 +15,6 @@ const App = () => {
             <p>
               {JSON.stringify(location)}
             </p>
-            {/* <GeolocationData /> */}
         </div>
         :
         null      

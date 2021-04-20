@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import axios from 'axios';
 
 const useGeolocation = () => {
     const [latLong, setLatLong] = useState({
@@ -16,6 +17,7 @@ const useGeolocation = () => {
     });
     
     const onSuccess = (location) =>  {
+
         setLatLong({
             loaded: true,
             coordinates: {
@@ -24,16 +26,14 @@ const useGeolocation = () => {
             }
         })
 
-        fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${location.coords.latitude}&longitude=${location.coords.longitude}&localityLanguage=en`)
-            .then((res) => res.json())
-            .then((data) => {
-                setGeoData({country: data.countryName, 
-                            state: data.principalSubdivision, 
-                            city: data.city, 
+        axios.get(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${location.coords.latitude}&longitude=${location.coords.longitude}&localityLanguage=en`)
+            .then((res) => {
+                setGeoData({country: res.data.countryName, 
+                            state: res.data.principalSubdivision, 
+                            city: res.data.city, 
                 })
             })
-            .catch(err => console.log(err))
-    }
+        }
 
     const onError = (error) => {
         setLatLong({
