@@ -2,43 +2,26 @@ import React, { useState, useEffect } from 'react'
 
 const GeolocationData = () => {
     const [details, setDetails] = useState({});
-    const [IP, setIP] = useState('');
-    
-    const getIP = () => {
-        fetch("https://api.ipdata.com")
-            .then(response => {
-                return response.json();
-            }, "jsonp")
-            .then(res => {
-                setIP(JSON.stringify(res.ip))
-            })
-            .catch(err => console.log(err))
-    }
-
-    const getUserGeolocation = () => {
-        getIP();
-
-        fetch(`http://ip-api.com/json/${IP}`)
+    useEffect(() => {
+        fetch(`https://freegeoip.app/json/`)
             .then(res =>  res.json())
             .then(data => setDetails(data))
             .catch(err => console.log(err))
-    }
-
-    useEffect(() => {
-        getUserGeolocation();
-    }, [IP, details])
+    }, [details])
 
     return (
         <div>
             <h1>With Public API:</h1>
             <ul>
-                <li key='0'>Country Code: {details.countryCode}</li>
-                <li key='1'>Country: {details.country}</li>
-                <li key='2'>Region: {details.region}</li>
-                <li key='3'>City: {details.zip}</li>                 
-                <li key='4'>Timezone: {details.timezone}</li>                 
-                <li key='5'>Lat: {details.lat}</li>                 
-                <li key='6'>Long: {details.lon}</li>                 
+                <li key='0'>Country Code: {details.country_code}</li>
+                <li key='1'>Country: {details.country_name}</li>
+                <li key='2'>Region Code: {details.region_code}</li>
+                <li key='3'>Region: {details.region_name}</li>
+                <li key='4'>City: {details.city}</li>                 
+                <li key='5'>Zip: {details.zip_code}</li>                 
+                <li key='6'>Timezone: {details.time_zone}</li>                 
+                <li key='7'>Lat: {details.latitude}</li>                 
+                <li key='8'>Long: {details.longitude}</li>                 
             </ul>
         </div>
     )
