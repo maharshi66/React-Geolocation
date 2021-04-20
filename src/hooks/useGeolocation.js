@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 const useGeolocation = () => {
-    const [locationDetails, setLocationDetails] = useState({
+    const [latLong, setLatLong] = useState({
         loaded: false, 
         coordinates: {
             latitude: '', 
@@ -9,18 +9,34 @@ const useGeolocation = () => {
         }
     });
     
-    const onSuccess = (location) => {
-        setLocationDetails({
+    const [geoData, setGeoData] = useState({
+        country: '',
+        state: '',
+        city: '',
+    });
+    
+    const onSuccess = (location) =>  {
+        setLatLong({
             loaded: true,
             coordinates: {
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
             }
         })
+
+        fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${location.coords.latitude}&longitude=${location.coords.longitude}&localityLanguage=en`)
+            .then((res) => res.json())
+            .then((data) => {
+                setGeoData({country: data.countryName, 
+                            state: data.principalSubdivision, 
+                            city: data.city, 
+                })
+            })
+            .catch(err => console.log(err))
     }
 
     const onError = (error) => {
-        setLocationDetails({
+        setLatLong({
             loaded: true,
             error: {
                 code: error.code,
@@ -36,11 +52,11 @@ const useGeolocation = () => {
                 message: "Geolocation Access Denied",
             });
         }
-
         navigator.geolocation.getCurrentPosition(onSuccess, onError);
+        
     }, []);
 
-    return locationDetails;
+    return {latLong, geoData};
 }
 
 export default useGeolocation

@@ -3,20 +3,20 @@ import useGeolocation from './hooks/useGeolocation';
 import GeolocationData from './GeolocationData'
 
 const App = () => {
-  const locationDetails = useGeolocation();
+  const location = useGeolocation();
 
   return (
     <div className="App">
       {
-        locationDetails.loaded ? 
+        location.latLong.loaded ? 
         <div>
             <h1>
               From front-end (Custom Hook):
             </h1>
             <p>
-              {JSON.stringify(locationDetails)}
+              {JSON.stringify(location)}
             </p>
-            <GeolocationData />
+            {/* <GeolocationData /> */}
         </div>
         :
         null      
